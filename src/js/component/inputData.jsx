@@ -9,17 +9,14 @@ export const InputData = () => {
     //expected = store.contacts.filter((ele) => parseInt(ele.id) === parseInt(store.idToEdit))
 
     const expected = { ...store.contacts.find((ele) => parseInt(ele.id) === parseInt(store.idToEdit)) }
-
     const { ['name']: name, ['phone']: phone, ['email']: email, ['address']: address } = expected;
-    console.log(name)
-    console.log(store.idToEdit)
     const onChangeHandlerInput = (e) => {
         console.log(form)
         let val = e.target.value
         let key = e.target.name
-        setForm({ ...form, [key]: { val } })
+        setForm({ ...form, [key]: val })
     }
-
+    console.log(form?.name)
     if (store.idToEdit === "") {
         return (
             <div className="mt-3">
@@ -39,12 +36,8 @@ export const InputData = () => {
                     <input type="text" name="address" className="form-control" id="address" placeholder="Enter address" onChange={(e) => onChangeHandlerInput(e)} />
                     <label htmlFor="address">Address</label>
                 </div>
-                <div className="form-floating mb-3">
-                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                    <label htmlFor="floatingInput">Email address</label>
-                </div>
                 <div className="container-fluid p-0">
-                    <button className="btn btn-primary w-100">Send</button>
+                    <button className="btn btn-primary w-100" onClick={() => actions.createContact(form.name, form.phone, form.email, form.address)}>Send</button>
                 </div>
             </div>)
     }

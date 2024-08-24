@@ -37,19 +37,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			createContact: (name, phone, email, address) => {
 
-				const URL = 'https://playground.4geeks.com/contact/agendas/michell/contacts';
+				const URL = 'https://playground.4geeks.com/contact/agendas/frankCv/contacts';
 				fetch(
 					URL, {
 					method: "POST",
 					headers: {
-						"Content-Type": "application/json",
+						"Content-Type": "application/json"
 					},
-					body: {
+					body: JSON.stringify({
 						"name": name,
 						"phone": phone,
 						"email": email,
 						"address": address
-					}
+					})
 				})
 					.then((response) => {
 						if (response.status === 201) {
@@ -71,14 +71,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 					URL, {
 					method: "UPDATE",
 					headers: {
-						"Content-Type": "application/json",
+						"Content-Type": "application/json"
 					},
-					body: {
+					body: JSON.stringify({
 						"name": `${body.name}`,
 						"phone": `${body.phone}`,
 						"email": `${body.email}`,
 						"address": `${body.address}`,
-					}
+					})
 				})
 					.then((response) => {
 						if (response.status === 200) {
@@ -93,7 +93,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.catch((error) => console.log(error))
 
 			},
-			setIsEdit: (id) => {				
+			onDeleteHandler: (id) => {
+				const auxList = getStore().contacts?.filter(e => e.id !== id)
+				setStore({ ...getStore(), contacts: auxList })
+			},
+			setIsEdit: (id) => {
 				setStore({ ...getStore(), idToEdit: id })
 			},
 			exampleFunction: () => {

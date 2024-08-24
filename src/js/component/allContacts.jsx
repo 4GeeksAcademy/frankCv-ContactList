@@ -16,10 +16,14 @@ export const AllContacts = () => {
         console.log(id)
         actions.setIsEdit(id)
     }
+    const onDeleteClickHandler = (e) => {
+        actions.onDeleteHandler(e)
+    }
     return (
-        <div className="container text-center mt-5" style={{ minWidth: "20%", width: "50vw" }}>
-            {store.contacts.map((e, index) => <Contact key={index} id={e.id} name={e.name} address={e.address} phone={e.phone} email={e.email} onEditClickHandler={(e) => onEditClickHandler(e)} />)}
-        </div>
+        store?.contacts.length === 0 ? <div className="container-fluid d-flex justify-content-center">THERE ISN'T ANY CONTACT, ADD SOME CONTACTCS</div> :
+            <div className="container text-center mt-5" style={{ minWidth: "20%", width: "50vw" }}>
+                {store.contacts.map((e, index) => <Contact onDeleteClickHandler={() => { onDeleteClickHandler(e.id) }} key={index} id={e.id} name={e.name} address={e.address} phone={e.phone} email={e.email} onEditClickHandler={(e) => onEditClickHandler(e)} />)}
+            </div>
 
     )
 }

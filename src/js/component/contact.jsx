@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 
 export const Contact = (props) => {
     return (
@@ -24,7 +24,7 @@ export const Contact = (props) => {
             </div>
             <div className="col-sm-4 col-md-1 col-lg-2 col-xxl-3 ms-0 pe-0 text-end pt-2">
                 <i className="fa-solid fa-pencil me-4" onClick={props.onEditClickHandler}></i>
-                <i className="fa-solid fa-trash me-2"></i>
+                <i className="fa-solid fa-trash me-2" onClick={props.onDeleteClickHandler}></i>
             </div>
         </div>
     )
