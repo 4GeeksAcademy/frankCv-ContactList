@@ -1,23 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 
 export const InputData = () => {
     const { store, actions } = useContext(Context);
     const [form, setForm] = useState({});
-    //const contacts = [...store.contacts.map((ele) => ele.id === store.idToEdit ? ele : `none`)]
-    // const { address, email, id, name, phone } = [...store.contacts.filter((ele) => ele.id === parseInt(store.idToEdit))]
-    //expected = store.contacts.filter((ele) => parseInt(ele.id) === parseInt(store.idToEdit))
-
-    const expected = { ...store.contacts.find((ele) => parseInt(ele.id) === parseInt(store.idToEdit)) }
-    const { ['name']: name, ['phone']: phone, ['email']: email, ['address']: address } = expected;
+    useEffect(() => {
+        console.log(store.contactToEdit)
+    }, [])
     const onChangeHandlerInput = (e) => {
-        console.log(form)
         let val = e.target.value
         let key = e.target.name
         setForm({ ...form, [key]: val })
     }
-    console.log(form?.name)
-    if (store.idToEdit === "") {
+
+    if (store.contactToEdit?.length === 0) {
         return (
             <div className="mt-3">
                 <div className="form-floating mb-3">
@@ -37,7 +33,7 @@ export const InputData = () => {
                     <label htmlFor="address">Address</label>
                 </div>
                 <div className="container-fluid p-0">
-                    <button className="btn btn-primary w-100" onClick={() => actions.createContact(form.name, form.phone, form.email, form.address)}>Send</button>
+                    <button className="btn btn-primary w-100" onClick={() => actions.createContact(form)}>Send</button>
                 </div>
             </div>)
     }
@@ -45,23 +41,28 @@ export const InputData = () => {
         return (
             <div className="mt-3">
                 <div className="form-floating mb-3">
-                    <input type="text" name="name" className="form-control" id="fullName" placeholder="Full Name" onChange={(e) => { onChangeHandlerInput(e) }} />
-                    <label htmlFor="fullName">{name}</label>
+                    <input defaultValue={store.contactToEdit[0].name} type="text" name="name" className="form-control" id="fullName" placeholder="Full Name" onChange={(e) => { onChangeHandlerInput(e) }} />
+                    <label htmlFor="fullName">Name</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="email" name="email" className="form-control" id="email" placeholder="Enter email" onChange={(e) => { onChangeHandlerInput(e) }} />
-                    <label >{email}</label>
+                    <input defaultValue={store.contactToEdit[0].email} type="email" name="email" className="form-control" id="email" placeholder="Enter email" onChange={(e) => { onChangeHandlerInput(e) }} />
+                    <label htmlFor="email">Email</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" name="phone" className="form-control" id="phone" placeholder="Enter phone" onChange={(e) => { onChangeHandlerInput(e) }} />
-                    <label >{phone}</label>
+                    <input defaultValue={store.contactToEdit[0].phone} type="text" name="phone" className="form-control" id="phone" placeholder="Enter phone" onChange={(e) => { onChangeHandlerInput(e) }} />
+                    <label htmlFor="phone">Phone</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" name="address" className="form-control" id="address" placeholder="Enter address" onChange={(e) => { onChangeHandlerInput(e) }} />
-                    <label >{address}</label>
+                    <input defaultValue={store.contactToEdit[0].address} type="text" name="address" className="form-control" id="address" placeholder="Enter address" onChange={(e) => { onChangeHandlerInput(e) }} />
+                    <label htmlFor="address">Address</label>
                 </div>
                 <div className="container-fluid p-0">
-                    <button className="btn btn-primary w-100" onClick={() => actions.updateContact(form)}>Save</button>
+                    <button className="btn btn-primary w-100" onClick={
+                        () => {
+                            
+                            actions.updateContact(form);
+                        }
+                    }>Save</button>
                 </div>
             </div>)
     }

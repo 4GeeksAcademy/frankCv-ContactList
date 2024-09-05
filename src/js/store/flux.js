@@ -14,7 +14,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			],
 			contacts: [],
-			idToEdit: ''
+			contactToEdit: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -35,7 +35,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 					.catch((error) => console.log(error))
 			},
-			createContact: (name, phone, email, address) => {
+			createContact: (form) => {
 
 				const URL = 'https://playground.4geeks.com/contact/agendas/frankCv/contacts';
 				fetch(
@@ -45,10 +45,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({
-						"name": name,
-						"phone": phone,
-						"email": email,
-						"address": address
+						"name": form.name,
+						"phone": form.phone,
+						"email": form.email,
+						"address": form.address
 					})
 				})
 					.then((response) => {
@@ -62,43 +62,48 @@ const getState = ({ getStore, getActions, setStore }) => {
 					})
 					.catch((error) => console.log(error))
 			},
-			updateContact: (body) => {
-				const allContacts = getStore().contacts.map((e) => e.id === getStore().idToEdit ? body : e);
-
-
-				const URL = `https://playground.4geeks.com/contact/agendas/frankCv/contacts/${getStore().idToEdit}`;
+			updateContact: (body) => {				
+				const URL = `https://playground.4geeks.com/contact/agendas/frankCv/contacts/${getStore().contactToEdit[0]?.id}`;
 				fetch(
 					URL, {
-					method: "UPDATE",
+					method: "PUT",
 					headers: {
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({
-						"name": `${body.name}`,
-						"phone": `${body.phone}`,
-						"email": `${body.email}`,
-						"address": `${body.address}`,
+						"name": body.name,
+						"phone": body.phone,
+						"email": body.email,
+						"address": body.address,
 					})
 				})
 					.then((response) => {
-						if (response.status === 200) {
-							console.log(response)
-							return response.json()
-						}
-					})
-					.then((data) => {
-						setStore(...getStore(), { contacts: allContacts })
-						setStore(...getStore(), { idToEdit: '' })
+						console.log(response.status)
+						// if (response.status === 200) {
+						// 	console.log(response.status)
+						// 	setStore({ ...getStore(), contacts: allContacts })
+						// 	setStore({ ...getStore(), contactToEdit: [] })
+						// 	return response.json()
+						// }
 					})
 					.catch((error) => console.log(error))
 
 			},
 			onDeleteHandler: (id) => {
-				const auxList = getStore().contacts?.filter(e => e.id !== id)
+				const auxList = getStore().contacts?.filter(e => e.id !== parseInt(id))
 				setStore({ ...getStore(), contacts: auxList })
+				console.log("https://playground.4geeks.com/contact/agendas/frankCv/contacts/"+id)
+				const resp = fetch("https://playground.4geeks.com/contact/agendas/frankCv/contacts/" + id, {
+					method: 'DELETE',
+					headers: {
+						"Content-Type": "application/json"
+					},
+				})
+				if (resp.status === 200) { return console.log('deleted') }
+
 			},
-			setIsEdit: (id) => {
-				setStore({ ...getStore(), idToEdit: id })
+			setContactToEdit: (id) => {
+				setStore({ ...getStore(), contactToEdit: getStore().contacts?.filter(e => e.id === parseInt(id)) })
 			},
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
